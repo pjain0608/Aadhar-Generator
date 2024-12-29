@@ -11,7 +11,7 @@ The Aadhar Viewer Portal is a Django-based web application designed to securely 
 1. **Frontend**: HTML, CSS
 2. **Backend**: Django Framework, Python
 3. **Database**: MySQL (can be replaced with sqlite/PostgreSQL)
-4. **Email Service**: Django's built-in email backend for OTP delivery
+4. **Email Service**: Django's built-in email backend for OTP delivery (SMTP)
 
 # Upcoming Features:
   -  Edit or Modify Details Using OTP: Users will be able to securely update their Aadhar card details after OTP authentication.
