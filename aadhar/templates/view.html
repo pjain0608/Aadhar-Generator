@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Aadhar</title>
+    <link rel="stylesheet" href="{% static 'css/view.css' %}">
+</head>
+<body>
+    <header>
+        <div class="header">
+            <div class="left">
+                <img src="https://website-2cf72d41.cyclicalpublishing.com/wp-content/uploads/2024/01/Aadhar-.png" alt="">
+            </div>
+            <div class="middle">
+                <img src="https://uidai.gov.in/images/logo/uidai_english_logo.svg" alt="logo">
+            </div>
+            <div class="right">
+                <div class="right-button">
+                    <a href="{% url 'home' %}">Home</a>
+                </div>
+                <div class="right-button">
+                    <a href="{% url 'view' %}">View Aadhar</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section>
+        <div class="contents">
+            {% if step == "input_aadhar" %}
+                <!-- Step 1: Input Aadhar Number -->
+                <h1>View Your Aadhar Details</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="step" value="input_aadhar">
+                    <div class="form-group">
+                        <label for="aadhar_number">Enter Aadhar Number:</label>
+                        <input type="text" id="aadhar_number" name="aadhar_number" placeholder="0000 0000 0000" maxlength="12" required>
+                    </div>
+                    <div class="button">
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+                {% if error_message %}
+                    <div class="error-message">{{ error_message }}</div>
+                {% elif success_message %}
+                    <div class="success-message">{{ success_message }}</div>
+                {% endif %}
+
+            {% elif step == "enter_otp" %}
+                <!-- Step 2: Enter OTP -->
+                <h1>Enter OTP</h1>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="step" value="enter_otp">
+                    <input type="hidden" name="aadhar_number" value="{{ aadhar_number }}">
+                    <div class="form-group">
+                        <label for="otp">Enter OTP:</label>
+                        <input type="text" id="otp" name="otp" placeholder="Enter OTP" maxlength="6" required>
+                    </div>
+                    <div class="button">
+                        <button type="submit">Verify</button>
+                    </div>
+                </form>
+                {% if error_message %}
+                    <div class="error-message">{{ error_message }}</div>
+                {% endif %}
+
+            {% elif step == "view_details" %}
+                <!-- Step 3: Display Aadhar Details -->
+                <h1>Your Aadhar Details</h1>
+                <div class="aadhar-info">
+                    <div class="aadhar-left">
+                        <p><strong>Aadhar Number:</strong> {{ user.aadhar }}</p>
+                        <p><strong>First Name:</strong> {{ user.first_name }}</p>
+                        <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+                        <p><strong>Mobile:</strong> {{ user.mobile }}</p>
+                        <p><strong>DOB:</strong> {{ user.dob }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Gender:</strong> {{ user.gender }}</p>
+                        <p><strong>Father's Name:</strong> {{ user.fathers_name }}</p>
+                        <p><strong>Mother's Name:</strong> {{ user.mothers_name }}</p>
+                        <p><strong>Address:</strong> {{ user.address }}</p>
+                    </div>
+                    <div class="aadhar-right">
+                        {% if user.img %}
+                            <img src="{{ user.img.url }}" alt="Aadhar Photo">
+                        {% else %}
+                            <img src="https://cdn-icons-png.flaticon.com/128/666/666201.png" alt="">
+                        {% endif %}
+                    </div>                    
+                </div>
+                <div class="aadhar">
+                    <div class="card">
+                        <div class="top-card">
+                            <div class="top-img">
+                                <img src="data:image/png;base64,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" alt="">
+                            </div>
+                            <div class="top-img">
+                                <img src="https://website-2cf72d41.cyclicalpublishing.com/wp-content/uploads/2024/01/Aadhar-.png" alt="">
+                            </div>
+                        </div>
+                        <div class="middle">
+                            <div class="middle-left">
+                                <img src="{{ user.img.url }}" alt="Aadhar Photo">
+                            </div>
+                            <div class="middle-right">
+                                <div>
+                                    <h3>
+                                        {{ user.first_name}} {{user.last_name}}
+                                    </h3>
+                                </div>
+                                <div>
+                                    <p>DOB: {{ user.dob }}</p>
+                                </div>
+                                <div>
+                                    {{ user.gender }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bottom">
+                            <div class="up">
+                                <h2>{{ user.aadhar }}</h2>
+                            </div>
+                            <div class="down">
+                                <p>
+                                    मेरा <span>आधार</span> मेरी पहचान
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</body>
+</html>
